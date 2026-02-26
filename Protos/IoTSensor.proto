@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcService";
+
+package IoT;
+
+// The greeting service definition.
+service IoTSensor {
+    rpc RegisterDevice(DeviceInfo) returns (RegisterResponse);
+    
+    rpc SendTelemetry(stream TelemetryEvent) returns (Ack);
+
+    rpc WatchCommands(DeviceId) returns (stream DeviceCommand);
+
+    rpc PushFirmware(DeviceId) returns (stream FirmwareRequest);
+
+    rpc GetDeviceStatus(DeviceStatus) returns (Ack);
+}
+
+message DeviceInfo {
+    string device_id = 1;
+    string device_type = 2;
+    string location = 3;
+}
+
+message RegisterResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message TelemetryEvent {
+    string device_id = 1;
+    double temperature = 2;
+    double humidity = 3;
+    int64 timestamp = 4;
+}
+
+message Ack {
+    bool success = 1;
+    string message = 2;
+}
+
+message DeviceId {
+    string device_id = 1;
+}
+
+message DeviceCommand {
+    string command = 1;
+    string parameters = 2;
+}
+
+message FirmwareRequest {
+    bytes firmware_data = 1;
+    string version = 2;
+}
+
+message DeviceStatus {
+    string device_id = 1;
+    bool online = 2;
+    double battery_level = 3;
+    string last_error = 4;
+}
